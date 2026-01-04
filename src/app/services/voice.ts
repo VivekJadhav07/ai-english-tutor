@@ -4,13 +4,14 @@ import { Injectable, NgZone } from '@angular/core';
 export class VoiceService {
   private recognition: any;
 
-  constructor(private zone: NgZone) {
+// Inside services/voice.ts constructor
+constructor(private zone: NgZone) {
     const { webkitSpeechRecognition } = (window as any);
     this.recognition = new webkitSpeechRecognition();
     this.recognition.lang = 'en-US';
-    this.recognition.continuous = true;
-    this.recognition.interimResults = true; // IMPORTANT: This enables real-time display
-  }
+    this.recognition.continuous = true; // Keep listening during pauses
+    this.recognition.interimResults = false; // Changed to false: Only return "polished" sentences
+}
 
   listen(onResult: (text: string, isFinal: boolean) => void) {
     this.recognition.onresult = (event: any) => {
